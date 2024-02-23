@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Útvonal</title>
+    <style>
+        body{
+            background-color: beige;
+        }
+        #jatek{
+            background-color: white;
+            border: 1px solid black;
+            width: 663px;height: 663px;
+            font-size: 0px;
+            padding: 10px;
+            margin: 0px auto;
+        }#jatek img:hover{
+            background-color: lightgray;
+        }#jatek img{
+            border-left: 1px solid lightgrey;
+            border-top: 1px solid lightgrey;
+        }
+        #bord{
+            border-right:1px solid lightgrey ;
+            border-bottom: 1px solid lightgrey;
+            font-size: 0px;
+            width: 660px;
+        }
+        #kepek img{
+            vertical-align: middle;
+        }
+        #kepek{
+            width: 660px;
+            margin: 0px auto;
+        }
+        #jobb{
+            float: right;
+        }
+    </style>
+    <script>
+        let t;
+        function start(){
+            t=[];
+            let html="";
+            for(let s=0;s<20;s++){
+                t[s]=[];
+                for(let o=0;o<20;o++){
+                    t[s][o]="null";
+                    html+="<img src='"+t[s][o]+".png'id='s"+s+",o"+o+"' onclick='firstkatt("+s+","+o+")'>"
+                }
+            }
+            document.getElementById("bord").innerHTML=html;
+        }
+        let kys =false
+        let count=0;
+        let asd;let asdd;
+        function firstkatt(s,o){
+            
+            if(kys==false){
+                kys=true;
+                t[s][o]="add"
+                document.getElementById("s"+s+",o"+o+"").src=t[s][o]+".png";
+                asd=s;asdd=o;
+            }else{
+                if(t[s+1][o]=="add"&&t[s][o]=="null"){
+                    t[s][o]="add"
+                    t[s+1][o]="up"
+                    setKep(s,o,"add")
+                    setKep(s+1,o,"up")
+                    count++;
+                }else if(t[s-1][o]=="add"&&t[s][o]=="null"){
+                    t[s-1][o]="down"
+                    t[s][o]="add"
+                    setKep(s,o,"add")
+                    setKep(s-1,o,"down")
+                    count++;
+                }else if(t[s][o+1]=="add"&&t[s][o]=="null"){
+                    t[s][o]="add"
+                    t[s][o+1]="left"
+                    setKep(s,o,"add")
+                    setKep(s,o+1,"left")
+                    count++;
+                }else if(t[s][o-1]=="add"&&t[s][o]=="null"){
+                    t[s][o]="add"
+                    t[s][o-1]="right"
+                    setKep(s,o,"add")
+                    setKep(s,o-1,"right")
+                    count++;
+                }
+            }
+            document.getElementById("db").innerHTML=count;
+        }
+
+
+        function setKep(s,o,kep){
+            document.getElementById("s"+s+",o"+o+"").src=kep+".png";
+            t[s][o]=kep
+        }
+
+
+        let t1=null;
+        let g=false;
+        function play(){
+            
+            if(g==false){
+                t1= setInterval(mozog,250);
+                g=true;
+            }else{
+                clearInterval(t1);
+                g=false;
+                document.getElementById("but").src="play.png";
+            }
+            
+            
+        }
+
+
+        function mozog(){
+            if(t[asd][asdd]=="add"){
+                clearInterval(t1);
+                document.getElementById("but").src="play.png"
+            }else{
+                if(t[asd][asdd]=="down"){
+                    setKep(asd,asdd,"null")
+                    asd=asd+1;
+                }else if(t[asd][asdd]=="up"){
+                    setKep(asd,asdd,"null")
+                    asd=asd-1;
+                }else if(t[asd][asdd]=="left"){
+                    setKep(asd,asdd,"null")
+                    asdd=asdd-1;
+                }else if(t[asd][asdd]=="right"){
+                    setKep(asd,asdd,"null")
+                    asdd=asdd+1;
+                }  
+                document.getElementById("but").src="playS.png";    
+                count--
+            }
+            
+            document.getElementById("db").innerHTML=count;
+        }
+
+
+        function reset(){
+            count=0;
+            for(let s=0;s<20;s++){
+                for(let o=0;o<20;o++){
+                    t[s][o]="null"
+                    setKep(s,o,"null")
+                }
+            }
+            kys=false;
+            document.getElementById("db").innerHTML=count;
+        }
+    </script>
+</head>
+<body onload="start();">
+    <div id="jatek"><div id="bord"></div></div>
+    <div id="kepek"><img id="but" src="play.png" onclick="play();"><span  id="jobb"><span id="db">0</span>  <img src="clear.png" onclick="reset();"></span></div>
+</body>
+</html>
